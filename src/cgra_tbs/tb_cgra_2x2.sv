@@ -27,6 +27,7 @@ localparam int WEST  = 3;
 logic clk, rst;
 
 logic [DATA_W-1:0] pe_in [3:0];
+logic [DATA_W-1:0] pe_drive [3:0];  // inyecci[on del dato
 logic [DATA_W-1:0] pe_out[3:0];
 logic pe_op[3:0];
 
@@ -108,7 +109,7 @@ end
 // Salidas hacia PEs
 // ===============================
 always_comb begin
-    pe_in[0] = sw_out[0][LOCAL];
+    pe_in[0] = pe_drive [0];  // pe recibe el estimulo externo 
     pe_in[1] = sw_out[1][LOCAL];
     pe_in[2] = sw_out[2][LOCAL];
     pe_in[3] = sw_out[3][LOCAL];
@@ -166,7 +167,7 @@ initial begin
 
     config_1_to_1();
 
-    pe_in[0] = 32'hDEADBEEF;
+    pe_drive[0] = 32'hDEADBEEF;
 
     repeat(6) @(posedge clk);
 
@@ -174,6 +175,20 @@ initial begin
         $error("FAIL: routing incorrecto");
     else
         $display("PASS: routing correcto");
+        
+    // =====================================
+    // TEST: segundo dato (misma ruta)
+    // =====================================
+    $display("\n[TEST] Segundo dato (misma ruta)");
+    
+    pe_drive[0] = 32'hCAFE0011;
+    
+    repeat(6) @(posedge clk);
+    
+    if (pe_out[3] !== 32'hCAFE0011)
+        $error("FAIL: segundo dato incorrecto");
+    else
+        $display("PASS: segundo dato correcto");
 
     $display("\nSimulation completed");
     $finish;
