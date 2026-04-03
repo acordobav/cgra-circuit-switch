@@ -26,7 +26,7 @@ module packetizer #(
   // Input side (from PE)
   input  logic [IN_WIDTH-1:0] in_data,
 
-  // Output side (to router/FIFO)
+  // Output side (to router)
   output logic [NUM_FLITS-1:0][FLIT_WIDTH-1:0] out_packet
 );
 

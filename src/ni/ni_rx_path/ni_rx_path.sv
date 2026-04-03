@@ -21,7 +21,7 @@ module ni_rx_path #(
 	input  logic clk,
 	input  logic rst_n,
 
-	// Input side (from router/FIFO)
+	// Input side (from router)
 	input  logic                  in_valid,
 	output logic                  in_ready,
 	input  logic [FLIT_WIDTH-1:0] in_data,

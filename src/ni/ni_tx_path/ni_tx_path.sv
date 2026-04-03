@@ -28,7 +28,7 @@ module ni_tx_path #(
   // Input side (from PE)
   input  logic [IN_WIDTH-1:0] in_data,
 
-  // Output side (to router/FIFO)
+  // Output side (to router)
   output logic [FLIT_WIDTH-1:0] out_packet,
   output logic tx_valid,
   output logic tx_done
