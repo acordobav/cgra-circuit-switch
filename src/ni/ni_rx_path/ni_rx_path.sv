@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 // -----------------------------------------------------------------------------
-// Packet Buffer (Parallel Read Buffer)
+// NI RX Path (Network Interface Reception Path)
 //
 // - Receives flits serially on input valid/ready handshake.
 // - Stores one complete packet in internal registers.
@@ -14,7 +14,7 @@
 //   dropped safely (drop mode) until in_last arrives, preventing overflow and
 //   preserving packet alignment for subsequent packets.
 // -----------------------------------------------------------------------------
-module packet_buffer #(
+module ni_rx_path #(
 	parameter int FLIT_WIDTH = 32,
 	parameter int MAX_FLITS  = 8
 )(

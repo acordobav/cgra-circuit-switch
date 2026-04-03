@@ -1,5 +1,19 @@
 `timescale 1ns / 1ps
 
+// -----------------------------------------------------------------------------
+// Packetizer (Parallel-to-Flit Formatter)
+//
+// - Captures a parallel input word from PE when in_load is asserted.
+// - Packs the captured word into NUM_FLITS flits of FLIT_WIDTH bits.
+// - Exposes the packed flits in parallel on out_packet.
+// - Clears and reloads packet storage only on in_load.
+//
+// Notes:
+// - NUM_FLITS is derived from IN_WIDTH and FLIT_WIDTH using ceiling division.
+// - If IN_WIDTH is not an exact multiple of FLIT_WIDTH, upper unused bits are
+//   zero-padded.
+// -----------------------------------------------------------------------------
+
 module packetizer #(
   parameter int IN_WIDTH   = 64,
   parameter int FLIT_WIDTH = 32,

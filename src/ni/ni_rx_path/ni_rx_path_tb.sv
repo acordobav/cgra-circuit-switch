@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module tb_packet_buffer;
+module ni_rx_path_tb;
 
 parameter int FLIT_WIDTH = 32;
 parameter int MAX_FLITS  = 8;
@@ -19,7 +19,7 @@ logic [MAX_FLITS-1:0][FLIT_WIDTH-1:0] out_packet;
 
 int error_count;
 
-packet_buffer #(
+ni_rx_path #(
 	.FLIT_WIDTH(FLIT_WIDTH),
 	.MAX_FLITS (MAX_FLITS)
 ) dut (
