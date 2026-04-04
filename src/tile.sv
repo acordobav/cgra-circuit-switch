@@ -51,7 +51,9 @@ module tile #(
 
     // Debug pe out y pe in
     output logic [DATA_W_P-1:0] pe_out_obs,
-    output logic [DATA_W_P-1:0] pe_in_obs
+    output logic [DATA_W_P-1:0] pe_in_obs,
+    output logic [DATA_W_P-1:0] sw_in_obs [N_PORTS_P],
+    output logic [DATA_W_P-1:0] sw_out_obs [N_PORTS_P]
 );
 
 logic [DATA_W_P-1:0] pe_in;
@@ -114,5 +116,11 @@ assign out_west   = sw_out[WEST];
 // -------------------------
 assign pe_in_obs = pe_in;
 assign pe_out_obs = pe_out;
+always_comb begin
+    for (int p = 0; p < N_PORTS_P; p++) begin
+        sw_in_obs[p]  = sw_in[p];
+        sw_out_obs[p] = sw_out[p];
+    end
+end
 
 endmodule

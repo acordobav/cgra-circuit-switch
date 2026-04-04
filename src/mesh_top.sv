@@ -40,7 +40,9 @@ module mesh_top #(
 
     // Observación
     output logic [DATA_W_P-1:0] pe_out_obs [ROWS_P][COLS_P],
-    output logic [DATA_W_P-1:0] pe_in_obs  [ROWS_P][COLS_P]
+    output logic [DATA_W_P-1:0] pe_in_obs  [ROWS_P][COLS_P],
+    output logic [DATA_W_P-1:0] sw_out_obs [ROWS_P][COLS_P][N_PORTS_P],
+    output logic [DATA_W_P-1:0] sw_in_obs  [ROWS_P][COLS_P][N_PORTS_P]
 );
 
     // Conexiones entre tiles
@@ -81,7 +83,9 @@ module mesh_top #(
                     .sel_cfg     (sel_cfg[r][c]),
 
                     .pe_out_obs  (pe_out_obs[r][c]),
-                    .pe_in_obs   (pe_in_obs[r][c])
+                    .pe_in_obs   (pe_in_obs[r][c]),
+                    .sw_out_obs  (sw_out_obs[r][c]),
+                    .sw_in_obs   (sw_in_obs[r][c])
                 );
             end
         end

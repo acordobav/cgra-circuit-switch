@@ -21,8 +21,8 @@
 
 package cgra_config_pkg;
 
-    parameter int ROWS    = 8;
-    parameter int COLS    = 8;
+    parameter int ROWS    = 3;
+    parameter int COLS    = 3;
     parameter int DATA_W  = 32;
     
     // Mesh : LOCAL + N + S + E + W

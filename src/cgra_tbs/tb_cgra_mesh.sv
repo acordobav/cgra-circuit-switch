@@ -40,6 +40,8 @@ logic [SEL_W-1:0]    sel_cfg      [ROWS][COLS][N_PORTS];
 logic                pe_op_cfg    [ROWS][COLS];
 logic [DATA_W-1:0]   pe_out_obs   [ROWS][COLS];
 logic [DATA_W-1:0]   pe_in_obs    [ROWS][COLS];
+logic [DATA_W-1:0]   sw_out_obs   [ROWS][COLS][N_PORTS];
+logic [DATA_W-1:0]   sw_in_obs    [ROWS][COLS][N_PORTS];
 
 mesh_top uut (
     .clk         (clk),
@@ -49,7 +51,9 @@ mesh_top uut (
     .inj_data_cfg(inj_data_cfg),
     .sel_cfg     (sel_cfg),
     .pe_out_obs  (pe_out_obs),
-    .pe_in_obs   (pe_in_obs)
+    .pe_in_obs   (pe_in_obs),
+    .sw_out_obs  (sw_out_obs),
+    .sw_in_obs   (sw_in_obs)
 );
 
 // ===============================
