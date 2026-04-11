@@ -60,6 +60,7 @@ Only the PEs involved in the routing path actively participate in data transfer,
 ```
 ├── src/
 │ ├── mesh_top.sv
+│ ├── tile.sv
 │ ├── crossbar.sv
 │ ├── pe.sv
 │ └── cgra_config_pkg.sv
@@ -76,6 +77,26 @@ Only the PEs involved in the routing path actively participate in data transfer,
 │
 └── README.md
 ```
+
+Analyzing the implemented architecture from bottom to top:
+
+- **cgra_config_pkg.sv**: In this file, all parameters are initialized, including the assigned value for each port (North, South, East, West, Local), the size of the data to be managed and the size of the mesh (row and column scheme).
+- pe.sv: This file implements the Processing Element. In this case, it is a sequential module that operates in two different modes: passthrough and NOT operation.
+- **crossbar.sv**: This module is combinational, and it is the component that connects the mesh to the Processing Element. It determines whether the received data is simply passing through or needs to be transmitted to the Processing Element.
+- **tile.sv**: This file represents the first connection between modules. Here, each crossbar is connected to its Processing Element, including the signal wiring required to enable communication with the neighborhood through the North, South, East, West, and Local ports, as well as with the PE.
+- **mesh_top.sv**: Depending on the required size of the mesh as defined on **cgra_config_pkg.sv**, this module generates all the required tiles and connects them to each other, while taking the mesh boundaries into account to avoid misconnections.
+
+Then, the testbench file instanciates the mesh module in order to inject the required data, establish and/or clear routes, and perform other operations needed to fully test the implemented design. 
+
+A quick review on the related testbench files is presented as follows:
+- **tb_cgra_mesh.sv**: This file instantiates the mesh to be tested and, through the coordinated use of the other testbench files, generates the required tests to verify the behavior of the modules working together. It creates test cases such as single, pipeline, and broadcast communication, while also clearing routes, creating new routes, and waiting for responses.
+- **tb_tasks_clear.svh**: This file clears routes and stimulus required for testing the UUT. Its purpose is to clean up the mesh so that there is independence between test cases within the same main testbench.
+- **tb_tasks_debug.svh**: This file periodically checks the mesh, and once a change in the data flowing through the mesh is detected, a set of print statements is enabled so the data can be easily observed from the main testbench file.
+- **tb_tasks_routing.svh**: This file implements the mechanisms required to create routes between different nodes through the Manhattan method, including one-to-one, one-to-all, and one-to-middle-destination routes.
+- **tb_tasks_pipeline.svh**: This file allows multiple data packets to be sent at once, enabling the implementation of specific test cases.
+- **tb_tasks_setups.svh**: This file implements wrappers to set up routes for use as part of the testbench.
+- **tb_tasks_waits.svh**: This file includes the mechanisms that allow the testbench to wait for the expected value while verifying the results of a test case.
+
 </h4> <hr style="border: 1px solid #000;"/>
 
 
