@@ -159,4 +159,4 @@ Professor: Luis León Vega (l.leon@itcr.ac.cr)
 
 https://github.com/acordobav/cgra-circuit-switch
 
-Video link:     ---------------------      TBD      ---------------------      TBD      ---------------------      TBD      ---------------------     
+[Video link](https://drive.google.com/file/d/1KqbiSDTqXnG51SubBWGj0tolq49THO3I/view?usp=sharing)
