@@ -105,7 +105,7 @@ A quick review on the related testbench files is presented as follows:
 The proposed CGRA interconnect architecture was synthesized and implemented in a Kria KV260 Vision AI Starter Kit FPGA using Xilinx Vivado. The critical path delay was estimated using the relationship between clock period and worst negative slack, as defined in (1):
 
 <p align="center">
-  T<sub>critical</sub> = T<sub>clock</sub> - Slack      (1)
+  T<sub>critical</sub> = T<sub>clock</sub> - WNS      (1)
 </p>
 
 
