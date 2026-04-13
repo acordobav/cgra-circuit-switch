@@ -57,34 +57,66 @@ Only the PEs involved in the routing path actively participate in data transfer,
 </h4> <hr style="border: 1px solid #000;"/>
 
 ## Files tree
+
 ```
-├── src/
-│ ├── mesh_top.sv
-│ ├── tile.sv
-│ ├── crossbar.sv
-│ ├── pe.sv
-│ └── cgra_config_pkg.sv
+├── README.md
+├── src
+│   ├── cgra_config_pkg.sv
+│   ├── cgra_tbs
+│   │   ├── tb_cgra_2x2.sv
+│   │   ├── tb_cgra_4x4_horizontal_not.sv
+│   │   ├── tb_cgra_4x4_manual_routing.sv
+│   │   ├── tb_cgra_mesh.sv
+│   │   └── tb_includes
+│   │       ├── tb_tasks_clear.svh
+│   │       ├── tb_tasks_debug.svh
+│   │       ├── tb_tasks_pipeline.svh
+│   │       ├── tb_tasks_routing.svh
+│   │       ├── tb_tasks_setups.svh
+│   │       └── tb_tasks_waits.svh
+│   ├── crossbar
+│   │   ├── crossbar.sv
+│   │   └── crossbar_tb.sv
+│   ├── mesh_top.sv
+│   ├── ni
+│   │   ├── ni_rx_path
+│   │   │   ├── ni_rx_path.sv
+│   │   │   └── ni_rx_path_tb.sv
+│   │   └── ni_tx_path
+│   │       ├── ni_tx_path.sv
+│   │       ├── ni_tx_path_tb.sv
+│   │       ├── packetizer.sv
+│   │       └── packetizer_tb.sv
+│   ├── pe
+│   │   ├── pe.sv
+│   │   └── pe_tb.sv
+│   └── tile.sv
 │
-├── tb/
-│ ├── tb_cgra_mesh.sv
-│ └── tb_includes/
-│ │ ├── tb_tasks_clear.svh
-│ │ ├── tb_tasks_debug.svh
-│ │ ├── tb_tasks_routing.svh
-│ │ ├── tb_tasks_pipeline.svh
-│ │ ├── tb_tasks_setups.svh
-│ │ └── tb_tasks_waits.svh
-│
-└── README.md
+└── kria_val
+    ├── prog_test_kria.sh
+    ├── send_bitstream.sh
+    ├── send_test.sh
+    ├── mesh_wrapper.v
+    ├── mesh_bridge.sv
+    ├── test_C
+    │   ├── cgra_2x2_test.c
+    │   ├── cgra_3x3_test.c
+    │   └── cgra_4x4_test.c
+    └── vivado_bd
+        ├── cgra_2x2_circuit_switch.pdf
+        ├── cgra_3x3_circuit_switch.pdf
+        └── cgra_4x4_circuit_switch.pdf
 ```
 
-Analyzing the implemented architecture from bottom to top:
+
+The ```src``` directory contains the hardware modules that implement the proposed CGRA architecture. The structure of the design can be understood by analyzing the modules from bottom to top.
 
 - **cgra_config_pkg.sv**: In this file, all parameters are initialized, including the assigned value for each port (North, South, East, West, Local), the size of the data to be managed and the size of the mesh (row and column scheme).
 - pe.sv: This file implements the Processing Element. In this case, it is a sequential module that operates in two different modes: passthrough and NOT operation.
 - **crossbar.sv**: This module is combinational, and it is the component that connects the mesh to the Processing Element. It determines whether the received data is simply passing through or needs to be transmitted to the Processing Element.
 - **tile.sv**: This file represents the first connection between modules. Here, each crossbar is connected to its Processing Element, including the signal wiring required to enable communication with the neighborhood through the North, South, East, West, and Local ports, as well as with the PE.
 - **mesh_top.sv**: Depending on the required size of the mesh as defined on **cgra_config_pkg.sv**, this module generates all the required tiles and connects them to each other, while taking the mesh boundaries into account to avoid misconnections.
+
 
 Then, the testbench file instanciates the mesh module in order to inject the required data, establish and/or clear routes, and perform other operations needed to fully test the implemented design. 
 
@@ -96,6 +128,39 @@ A quick review on the related testbench files is presented as follows:
 - **tb_tasks_pipeline.svh**: This file allows multiple data packets to be sent at once, enabling the implementation of specific test cases.
 - **tb_tasks_setups.svh**: This file implements wrappers to set up routes for use as part of the testbench.
 - **tb_tasks_waits.svh**: This file includes the mechanisms that allow the testbench to wait for the expected value while verifying the results of a test case.
+
+### Hardware validation on Kria KV260.
+
+The ```kria_val``` directory contains the scripts and software used to validate the CGRA architecture on the Kria KV260 platform. These files allow the FPGA bitstream to be deployed to the board, test programs to be transferred and executed, and the results of the hardware implementation to be verified.
+
+A brief description of the files contained in this directory is presented below:
+
+- **prog_test_kria.sh**: This script programs the FPGA on the Kria platform with the generated bitstream and executes the selected test application.
+- **send_bitstream.sh**: This script transfers the compiled bitstream to the Kria board, allowing the programmable logic to be configured with the CGRA design.
+- **send_test.sh**: This script sends the compiled test program to the Kria platform and prepares it for execution.
+- **mesh_wrapper.v**: This module provides the top-level interface used to integrate the CGRA architecture with the Kria KV260 platform. It exposes the CGRA configuration and data signals through AXI GPIO interfaces, enabling memory-mapped communication between the processing system and the programmable logic.
+- **mesh_bridge.sv**: This module translates the flat GPIO-based interface into the internal multi-dimensional configuration signals used by the CGRA mesh. It distributes routing selections, injection controls, and data signals across the mesh structure.
+
+```test_C/```: This directory contains C-based test applications used to validate the CGRA behavior directly on the hardware platform to validate routing behavior and data propagation across the CGRA for 2×2, 3×3, and 4×4 configurations.
+- **cgra_2x2_test.c**
+- **cgra_3x3_test.c**
+- **cgra_4x4_test.c**
+
+```vivado_bd/```: This directory contains exported block design diagrams generated in Vivado that illustrate the hardware integration of the circuit-switched CGRA architecture on the Kria platform for different mesh configurations (2×2, 3×3, and 4×4).
+- **cgra_2x2_circuit_switch.pdf**
+- **cgra_3x3_circuit_switch.pdf**
+- **cgra_4x4_circuit_switch.pdf**
+
+The following figure shows the block design used to integrate the proposed CGRA architecture with the Kria KV260 platform.
+
+<p align="center">
+<img width="400" height="300" alt="cgra_3x3_circuit_switch" src="https://github.com/user-attachments/assets/7f5ed877-9782-4c21-becd-2171d26921e1" />
+</p>
+<p align="center">
+  Figure 3. Block design of the 3×3 circuit-switched CGRA implementation used for hardware validation on the Kria platform.
+</p>
+
+
 
 </h4> <hr style="border: 1px solid #000;"/>
 
