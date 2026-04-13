@@ -115,12 +115,14 @@ Where WNS is Worst Negative Slack and The maximum operating frequency can then b
   F<sub>max</sub> = 1 / T<sub>critical</sub>        (2)
 </p>
 
-To determine the operating frequency of the design, multiple clock constraints were evaluated. An initial test at 300 MHz resulted in a large negative slack (-9.682 ns), indicating that the design exceeds its timing capabilities.
+To determine the operating frequency of the design, multiple clock constraints were evaluated. This analysis was performed using the 3×3 CGRA configuration, which represents the more demanding case in terms of interconnect complexity. An initial test at 300 MHz resulted in a large negative slack (-9.682 ns), indicating that the design exceeds its timing capabilities.
+
 
 At 50 MHz, the design meets timing with a large margin, while at 80 MHz, it still meets timing but operates very close to the limit (0.311 ns slack). At 75 MHz, a better balance between performance and timing margin is achieved (WNS = 1.182 ns), making it a more robust operating point.
 
-Based on the critical path delay, the estimated maximum operating frequency is approximately 82 MHz. Therefore, a practical operating range of 70–75 MHz is recommended to ensure reliable operation.
-Timing results for different target frequencies are presented in Table I.
+
+Based on the critical path delay, the estimated maximum operating frequency is approximately 82 MHz for the 3×3 configuration. Therefore, a practical operating range of 70–75 MHz is recommended to ensure reliable operation. This operating range is expected to be valid for smaller configurations, such as the 2×2 mesh, which exhibit lower routing complexity. Timing results for different target frequencies are presented in Table I.
+
 
 ### Table I. Timing Analysis
 
@@ -131,12 +133,19 @@ Timing results for different target frequencies are presented in Table I.
 | 80  | 12.50 | 0.311  | 12.19 | Met     |
 | 300 | 3.33  | -9.682 | 13.01 | Not met |
 
-The design evaluation was performed on 2×2 and 3×3 CGRA meshes, analyzing the resource utilization results in Table II to assess the scalability of the interconnect.
+The design evaluation was performed on 2×2, 3×3, and 4×4 CGRA meshes, analyzing the resource utilization results in Table II to assess the scalability of the interconnect. While the maximum operating frequency was derived from the 3×3 configuration as a representative case, Table II provides an overview of the achievable maximum frequencies across different mesh sizes.
 
-Table II. Interconnect Resource utilization for different CGRA sizes 
+### Table II. Interconnect Resource utilization for different CGRA sizes 
 
-[WIP]
+| CGRA Size | LUTs  | FFs  | F7 Muxes | Global Clk Buffers | Fmax Op. (MHz) |
+|-----------|-------|------|----------|---------------------|----------------|
+| 2×2       | 3988  | 4882 | 4        | 1                   | 300            |
+| 3×3       | 7040  | 7436 | 68       | 2                   | 75             |
+| 4×4       | 11304 | 9773 | 36       | 2                   | 40             |
 
+LUT and FF counts grow significantly as the CGRA size increases, due to the higher number of processing elements and, more importantly, the expanded interconnect required between them.
+A particularly notable increase is observed in the number of F7 multiplexers. This growth is primarily driven by the expansion of the crossbar-based switching fabric, where each additional node introduces new routing options and connectivity requirements, resulting in a larger number of multiplexing structures.
+In terms of performance, the maximum operating frequency decreases as the mesh size increases. This behavior indicates that the critical path becomes dominated by the interconnect, as data must traverse a greater number of switches and longer combinational paths.
 
 Functional validation of the interconnect was performed using a custom testbench covering representative communication patterns across the CGRA grid.
 
@@ -176,7 +185,7 @@ Two scenarios were evaluated: routing with intermediate processing, where select
 
 
 
-FUTURE WORK  
+ ## FUTURE WORK  
 
 While the proposed architecture demonstrates the feasibility and effectiveness of the current design choices, several opportunities remain for further improvement and exploration. Future work will focus on enhancing performance, scalability, and flexibility by revisiting key architectural decisions and investigating alternative design approaches.
 
@@ -189,26 +198,28 @@ Another promising direction for future work is the exploration of data packetiza
 
 
 
+## CONCLUSIONS  
 
+A circuit-switched interconnect architecture for A circuit-switched interconnect architecture for CGRAs was proposed, reducing routing complexity through static configuration. The elimination of dynamic arbitration and buffering simplifies the interconnect microarchitecture while preserving deterministic communication.
 
-CONCLUSIONS
+FPGA results show stable timing behavior, achieving up to 80 MHz for the 3×3 mesh configuration, which was used as a representative case for timing characterization. A practical operating range of 70–75 MHz is identified to ensure reliable operation for this configuration and smaller CGRA sizes.
 
-A circuit-switched interconnect architecture for CGRAs was proposed, reducing routing complexity through static configuration. The elimination of dynamic arbitration and buffering simplifies the interconnect microarchitecture while preserving deterministic communication.
-
-FPGA results show stable timing behavior, achieving up to 80 MHz, with a practical operating range of 70–75 MHz without compromising reliability.
-
-Resource utilization … [WIP]
-
+Evaluation across multiple mesh sizes shows that hardware cost increases with the CGRA dimensions, primarily due to the expansion of the interconnect and crossbar-based switching fabric, which introduces additional routing resources and multiplexing structures. At the same time, the maximum operating frequency decreases as the mesh size increases, indicating that the interconnect becomes the dominant factor in the critical path.
 
 Functional validation confirms reliable operation across multiple communication patterns, including one-to-one, one-to-many, and concurrent multi-route scenarios, without interference between data paths. The architecture also supports in-path computation, allowing intermediate PEs to process data while preserving end-to-end communication.
 
 Additionally, the proposed routing model enables predictable data movement through statically defined Manhattan paths and supports parallel data flows under a structured configuration scheme. These results demonstrate that reduced routing flexibility can still sustain representative CGRA communication patterns while simplifying the overall interconnect design.
 
+## USE OF AI-ASSISTED TOOLS
+
+In this project, AI tools, including ChatGPT, Copilot, and Grok, were used solely as supportive resources to assist with concept exploration, clarification of ideas, and improvement of the manuscript’s wording. All technical decisions, interpretations, and final content were determined by the authors.
 
 
+## Repository
 
+https://github.com/acordobav/cgra-circuit-switch
 
-
+[Video link](https://drive.google.com/file/d/1KqbiSDTqXnG51SubBWGj0tolq49THO3I/view?usp=sharing)
 
 ## General Information
 
@@ -227,8 +238,4 @@ Professor: Luis León Vega (l.leon@itcr.ac.cr)
 - Juan Pablo Ureña (juurena@estudiantec.cr)
 - Víctor Sánchez (vicsma2409@estudiantec.cr)
 
-## Repository
 
-https://github.com/acordobav/cgra-circuit-switch
-
-[Video link](https://drive.google.com/file/d/1KqbiSDTqXnG51SubBWGj0tolq49THO3I/view?usp=sharing)
