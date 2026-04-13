@@ -151,7 +151,7 @@ A brief description of the files contained in this directory is presented below:
 - **cgra_3x3_circuit_switch.pdf**
 - **cgra_4x4_circuit_switch.pdf**
 
-The following figure shows the block design used to integrate the proposed CGRA architecture with the Kria KV260 platform.
+The Figure 3 shows the block design used to integrate the proposed CGRA architecture with the Kria KV260 platform.
 
 <p align="center">
 <img width="400" height="300" alt="cgra_3x3_circuit_switch" src="https://github.com/user-attachments/assets/7f5ed877-9782-4c21-becd-2171d26921e1" />
@@ -216,34 +216,34 @@ Functional validation of the interconnect was performed using a custom testbench
 
 One-to-one communication scenarios were evaluated to validate correct data propagation across multi-hop paths. These tests confirm that data traverses the grid following the statically configured Manhattan routes, reaching the destination node without loss or corruption. Figure 2 illustrates this routing behavior.
 
-Scenarios involving intermediate PEs were also evaluated, where selected nodes perform computations on in-flight data. The results confirm that PEs can operate transparently within the routing path, correctly consuming input data and reinjecting results into the interconnect. As can be illustrated in Figure 3: 
+Scenarios involving intermediate PEs were also evaluated, where selected nodes perform computations on in-flight data. The results confirm that PEs can operate transparently within the routing path, correctly consuming input data and reinjecting results into the interconnect. As can be illustrated in Figure 4: 
 
 <p align="center">
   <img width="350" height="250" alt="fig3" src="https://github.com/user-attachments/assets/34bd9d87-23f8-4260-adec-fb085f950839" />
 </p>
 <p align="center">
-  Figure 3. Crossbar flow based on a one-to-one route with middle observation.
+  Figure 4. Crossbar flow based on a one-to-one route with middle observation.
 </p>
 
 One-to-many communication patterns were validated through broadcast scenarios, demonstrating that a single source node can distribute data to multiple destinations simultaneously. These tests confirm the ability of the crossbar-based switches to support concurrent routing paths without conflicts.
-Figure 4 illustrates this routing behavior.
+Figure 5 illustrates this routing behavior.
 <p align="center">
    <img width="350" height="250" alt="fig4" src="https://github.com/user-attachments/assets/171e2f75-0f90-4971-94ac-ea156a8e2de8" />
 </p>
 <p align="center">
-  Figure 4. Crossbar flow-based full broadcast route.
+  Figure 5. Crossbar flow-based full broadcast route.
 
 </p>
 
 
 Additionally, concurrent multi-route behavior was validated by configuring multiple independent communication paths across the CGRA grid. In these tests, several horizontal routes were activated simultaneously, each injecting distinct data streams from different source nodes.
-Two scenarios were evaluated: routing with intermediate processing, where selected PEs apply a NOT operation to in-flight data, and manual routing, where data is forwarded without modification. The results confirm that the interconnect supports concurrent data transfers across multiple paths without interference, while enabling selective computation within the routing fabric. This behavior can be illustrated by Figure 5. 
+Two scenarios were evaluated: routing with intermediate processing, where selected PEs apply a NOT operation to in-flight data, and manual routing, where data is forwarded without modification. The results confirm that the interconnect supports concurrent data transfers across multiple paths without interference, while enabling selective computation within the routing fabric. This behavior can be illustrated by Figure 6. 
 <p align="center">
   <img width="350" height="250" alt="fig5" src="https://github.com/user-attachments/assets/baa28435-0cac-4c79-b112-6d2c27d13e2e" />
 
 </p>
 <p align="center">
-   Figure 5. Crossbar flow-based parallel routes.
+   Figure 6. Crossbar flow-based parallel routes.
 
 </p>
 
